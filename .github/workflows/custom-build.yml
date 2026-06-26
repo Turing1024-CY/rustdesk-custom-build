@@ -1,0 +1,24 @@
+name: Custom Build - Windows EXE and Android APK
+
+on:
+  workflow_dispatch:
+    inputs:
+      upload_artifacts:
+        description: "Upload build artifacts"
+        required: false
+        default: "true"
+        type: boolean
+
+jobs:
+  build-windows:
+    uses: ./.github/workflows/flutter-build.yml
+    with:
+      upload-artifact: ${{ github.event.inputs.upload_artifacts != 'false' }}
+      upload-tag: custom
+
+  build-android:
+    uses: ./.github/workflows/flutter-build.yml
+    with:
+      upload-artifact: ${{ github.event.inputs.upload_artifacts != 'false' }}
+      upload-tag: custom
+    secrets: inherit
