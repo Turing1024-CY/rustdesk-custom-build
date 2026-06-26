@@ -1,0 +1,10 @@
+enc_id = ''
+password = 'Turing@9527'
+salt = ''
+key_pair = [
+    [],
+    [],
+]
+key_confirmed = false
+
+[keys_confirmed]

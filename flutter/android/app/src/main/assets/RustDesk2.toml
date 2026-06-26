@@ -1,0 +1,11 @@
+rendezvous_server = ''
+nat_type = 0
+serial = 0
+unlock_pin = '9527'
+
+[options]
+verification-method = 'use-both-passwords'
+key = '25madstRr0sKNMBXK29d1eNIi4X4Eaq8I4p74ijV624='
+custom-rendezvous-server = 'rd.hnboyun.com.cn'
+enable-check-update = 'N'
+allow-auto-update = 'N'
