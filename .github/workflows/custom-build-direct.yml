@@ -1,0 +1,66 @@
+name: Custom Build Direct - Windows EXE and Android APK
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: "Build platform"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - windows
+          - android
+
+jobs:
+  build-windows:
+    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'windows' }}
+    runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+        job:
+          - {
+              target: x86_64-pc-windows-msvc,
+              arch: x86_64,
+              vcpkg-triplet: x64-windows-static,
+            }
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Setup environment
+        uses: ./.github/workflows/flutter-build.yml@main
+        with:
+          upload-artifact: true
+          upload-tag: custom
+      - name: Build Windows
+        run: |
+          python build.py --flutter --hwcodec
+
+  build-android:
+    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'android' }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        job:
+          - { arch: aarch64, target: aarch64-linux-android }
+          - { arch: armv7, target: armv7-linux-androideabi }
+          - { arch: x86_64, target: x86_64-linux-android }
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Setup environment
+        uses: ./.github/workflows/flutter-build.yml@main
+        with:
+          upload-artifact: true
+          upload-tag: custom
+      - name: Build Android
+        run: |
+          cd flutter
+          flutter build apk --release
